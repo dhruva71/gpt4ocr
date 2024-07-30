@@ -1,18 +1,16 @@
 mod internals;
 
 use internals::images_from_pdf;
+use dotenvy::dotenv;
+use std::env;
 
-fn main()  {
-    let file_path = "Resume.pdf";
+#[tokio::main]
+async fn main()  {
+    // load environment variables from .env file
+    dotenv().expect(".env file not found");
 
-    let _ = internals::gpt4o::create_openai_client("");
+    let openai_api_key = env::var("OPENAI_API_KEY").expect("failed to load OpenAI API key");
 
-    let result = images_from_pdf::extract_images_from_pdf(file_path);
-    match result {
-        Ok(v) => {
-            println!("Images extracted successfully: {:?}", v);
-        },
-        Err(e) => println!("Error: {}", e),
-    }
+    let _ = internals::gpt4o::run_ocr_on_image(internals::gpt4o::create_openai_client(&openai_api_key).unwrap(), "output/Resume2-0-1.png").await;
 }
 

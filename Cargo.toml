@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 dotenvy = "0.15.7"
 image = "0.25.2"
-kalosm = { git = "https://github.com/floneum/floneum", version = "0.2.2", features = ["vision", "cuda"] }
 openai-api-rs = "5.0.4"
 pdf2image = "0.1.2"
+tokio = { version = "1.0.0", features = ["rt", "rt-multi-thread", "macros"] }
+base64 = "0.22.1"
