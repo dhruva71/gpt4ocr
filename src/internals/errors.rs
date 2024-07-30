@@ -5,6 +5,7 @@ pub struct APIKeyError {
     message: String,
 }
 
+/// Custom error type for API key errors.
 impl APIKeyError {
     pub(crate) fn new(message: &str) -> Self {
         APIKeyError {

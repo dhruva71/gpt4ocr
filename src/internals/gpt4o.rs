@@ -1,4 +1,5 @@
 use std::env;
+use std::f32::consts::E;
 use openai_api_rs::v1::api::OpenAIClient;
 use openai_api_rs::v1::chat_completion::{self, ChatCompletionRequest};
 use crate::internals::{errors, image_handlers};
@@ -30,7 +31,8 @@ pub fn create_openai_client(api_key: &str) -> Result<OpenAIClient, errors::APIKe
     Ok(client)
 }
 
-pub async fn run_ocr_on_image(client: OpenAIClient, image_path: &str) -> Result<(), Box<dyn std::error::Error>> {
+/// Run OCR on an image using the OpenAI API, and save the extracted text to a JSON file.
+pub async fn run_ocr_on_image(client: OpenAIClient, image_path: &str) -> Result<String, Box<dyn std::error::Error>> {
     // idea from: https://community.openai.com/t/how-to-load-a-local-image-to-gpt4-vision-using-api/533090/3
     // load image as base64
     let image = image::open(image_path).unwrap();
@@ -77,23 +79,19 @@ pub async fn run_ocr_on_image(client: OpenAIClient, image_path: &str) -> Result<
             // println!("Images extracted successfully: {:?}", v);
             match &v.choices[0].message.content {
                 Some(content) => {
-                    println!("Content: {:?}", content);
-                    // TODO strip out the markdown json markers i.e. ```json and ```
-                    save_json_to_file(content, "output/ocr_output.json").await?;
+                    return Ok(content.to_string());
                 }
                 None => {
-                    println!("No content found.");
+                    return Err("No content found.".into());
                 }
             }
         }
         Err(e) => println!("Error: {}", e),
     }
-    // dbg!(&result);
-
-    Ok(())
+    Ok("Unknown error.".to_string())
 }
 
-async fn save_json_to_file(json_data: &str, file_path: &str) -> Result<(), Box<dyn std::error::Error>> {
+pub async fn save_json_to_file(json_data: &str, file_path: &str) -> Result<(), Box<dyn std::error::Error>> {
     use std::fs::File;
     use std::io::Write;
 
