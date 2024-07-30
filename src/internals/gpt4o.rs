@@ -1,13 +1,12 @@
 use std::env;
-use std::f32::consts::E;
-use openai_api_rs::v1::api::OpenAIClient;
-use openai_api_rs::v1::chat_completion::{self, ChatCompletionRequest};
-use crate::internals::{errors, image_handlers};
-
-use openai_api_rs::v1::common::GPT4_O;
 
 use base64::Engine as _;
 use image::GenericImageView;
+use openai_api_rs::v1::api::OpenAIClient;
+use openai_api_rs::v1::chat_completion::{self, ChatCompletionRequest};
+use openai_api_rs::v1::common::GPT4_O_MINI;
+
+use crate::internals::{errors, image_handlers, prompts};
 
 pub fn create_openai_client(api_key: &str) -> Result<OpenAIClient, errors::APIKeyError> {
     let openai_api_key: String;
@@ -45,13 +44,13 @@ pub async fn run_ocr_on_image(client: OpenAIClient, image_path: &str) -> Result<
 
     // run the OpenAI request
     let req = ChatCompletionRequest::new(
-        GPT4_O.to_string(),
+        GPT4_O_MINI.to_string(),
         vec![chat_completion::ChatCompletionMessage {
             role: chat_completion::MessageRole::user,
             content: chat_completion::Content::ImageUrl(vec![
                 chat_completion::ImageUrl {
                     r#type: chat_completion::ContentType::text,
-                    text: Some(String::from("Extract the text of this image and return it as a JSON.")),
+                    text: Some(String::from(prompts::generate_personal_data_prompt())),
                     image_url: None,
                 },
                 chat_completion::ImageUrl {

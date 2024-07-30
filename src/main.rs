@@ -12,11 +12,11 @@ async fn main()  {
 
     let openai_api_key = env::var("OPENAI_API_KEY").expect("failed to load OpenAI API key");
 
-    let response_json = internals::gpt4o::run_ocr_on_image(internals::gpt4o::create_openai_client(&openai_api_key).unwrap(), "output/Resume2-0-1.png").await;
+    let response_json = internals::gpt4o::run_ocr_on_image(internals::gpt4o::create_openai_client(&openai_api_key).unwrap(), "output/Resume2-0-3.png").await;
     match response_json {
         Ok(json) => {
             println!("{}", json);
-            gpt4o::save_json_to_file(json.as_str(), "output/Resume2-0-1.json").await;
+            let _ = gpt4o::save_json_to_file(json.as_str(), "output/Resume2-0-1.json").await;
         }
         Err(e) => {
             println!("Error: {}", e);
