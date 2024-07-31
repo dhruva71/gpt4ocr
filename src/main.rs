@@ -25,8 +25,17 @@ async fn main() {
         match response_json {
             Ok(json) => {
                 println!("{}", json);
-                let json_path = "output/".to_string() + &image_path + ".json";
-                let _ = gpt4o::save_json_to_file(json.as_str(), json_path.as_str()).await;
+                let json_path = image_path + ".json";
+                dbg!("Saving JSON to: {}", &json_path);
+                let json_save = gpt4o::save_json_to_file(json.as_str(), json_path.as_str()).await;
+                match json_save {
+                    Ok(_) => {
+                        println!("JSON saved to: {}", json_path);
+                    }
+                    Err(e) => {
+                        println!("Error: {}", e);
+                    }
+                }
             }
             Err(e) => {
                 println!("Error: {}", e);

@@ -37,7 +37,6 @@ pub async fn run_ocr_on_image(client: OpenAIClient, image_path: &str) -> Result<
     let image = image::open(image_path).unwrap();
     let image_base64 = image_handlers::get_base64_from_image(image);
     let url_data = String::from(
-        // "https://upload.wikimedia.org/wikipedia/commons/5/50/Bitcoin.png",
         "data:image/png;base64,".to_owned() + &image_base64,
     );
 
