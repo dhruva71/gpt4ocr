@@ -14,8 +14,9 @@ pub fn extract_images_from_pdf(file_path: &str) -> Result<Vec<String>, PDF2Image
     println!("Extracting images from: {}", prefix);
 
     let pdf = PDF::from_file(prefix.as_str()).unwrap();
+    let num_pages = pdf.page_count();
     let pages = pdf.render(
-        pdf2image::Pages::Range(1..=3),
+        pdf2image::Pages::Range(1..=num_pages),
         RenderOptionsBuilder::default().build()?,
     );
 
