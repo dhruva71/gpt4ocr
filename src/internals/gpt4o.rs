@@ -12,12 +12,10 @@ pub fn create_openai_client(api_key: &str) -> Result<OpenAIClient, errors::APIKe
     let openai_api_key: String;
     if !api_key.is_empty() {
         openai_api_key = api_key.to_string();
-        dbg!("OpenAI API key is empty.");
     } else {
         match env::var("OPENAI_API_KEY") {
             Ok(key) => {
                 openai_api_key = key;
-                dbg!("OpenAI API key loaded successfully.", &openai_api_key);
             }
             Err(e) => {
                 dbg!("Error: failed to load OpenAI API key.\nDetails: {}", e);
@@ -31,7 +29,7 @@ pub fn create_openai_client(api_key: &str) -> Result<OpenAIClient, errors::APIKe
 }
 
 /// Run OCR on an image using the OpenAI API, and save the extracted text to a JSON file.
-pub async fn run_ocr_on_image(client: OpenAIClient, image_path: &str) -> Result<String, Box<dyn std::error::Error>> {
+pub async fn run_ocr_on_image(client: OpenAIClient, image_path: &str, prompt: &str) -> Result<String, Box<dyn std::error::Error>> {
     // idea from: https://community.openai.com/t/how-to-load-a-local-image-to-gpt4-vision-using-api/533090/3
     // load image as base64
     let image = image::open(image_path).unwrap();
@@ -39,6 +37,13 @@ pub async fn run_ocr_on_image(client: OpenAIClient, image_path: &str) -> Result<
     let url_data = String::from(
         "data:image/png;base64,".to_owned() + &image_base64,
     );
+
+    let gpt4o_prompt: String;
+    if prompt.is_empty() {
+        gpt4o_prompt = prompts::generate_personal_data_prompt();
+    } else {
+        gpt4o_prompt = prompt.to_string();
+    }
 
 
     // run the OpenAI request
@@ -49,7 +54,7 @@ pub async fn run_ocr_on_image(client: OpenAIClient, image_path: &str) -> Result<
             content: chat_completion::Content::ImageUrl(vec![
                 chat_completion::ImageUrl {
                     r#type: chat_completion::ContentType::text,
-                    text: Some(String::from(prompts::generate_personal_data_prompt())),
+                    text: Some(String::from(gpt4o_prompt)),
                     image_url: None,
                 },
                 chat_completion::ImageUrl {
