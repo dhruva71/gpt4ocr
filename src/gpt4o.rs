@@ -1,7 +1,5 @@
 use std::env;
 
-use base64::Engine as _;
-use image::GenericImageView;
 use openai_api_rs::v1::api::OpenAIClient;
 use openai_api_rs::v1::chat_completion::{self, ChatCompletionRequest};
 use openai_api_rs::v1::common::GPT4_O_MINI;
