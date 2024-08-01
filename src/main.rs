@@ -2,11 +2,10 @@ use std::env;
 
 use dotenvy::dotenv;
 
-use internals::images_from_pdf;
+use gpt4ocr::{file_handlers, images_from_pdf};
 
-use crate::internals::gpt4o;
+use gpt4ocr::gpt4o;
 
-mod internals;
 
 #[tokio::main]
 async fn main() {
@@ -28,7 +27,7 @@ async fn main() {
                 println!("{}", json);
                 let json_path = image_path + ".json";
                 dbg!("Saving JSON to: {}", &json_path);
-                let json_save = gpt4o::save_json_to_file(json.as_str(), json_path.as_str()).await;
+                let json_save = file_handlers::save_json_to_file(json.as_str(), json_path.as_str()).await;
                 match json_save {
                     Ok(_) => {
                         println!("JSON saved to: {}", json_path);

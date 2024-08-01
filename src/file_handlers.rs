@@ -15,3 +15,12 @@ pub fn get_base64_from_image(img: DynamicImage) -> String {
 
     return base64_string;
 }
+
+pub async fn save_json_to_file(json_data: &str, file_path: &str) -> Result<(), Box<dyn std::error::Error>> {
+    use std::fs::File;
+    use std::io::Write;
+
+    let mut file = File::create(file_path)?;
+    file.write_all(json_data.as_bytes())?;
+    Ok(())
+}

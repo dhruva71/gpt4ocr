@@ -6,7 +6,7 @@ use openai_api_rs::v1::api::OpenAIClient;
 use openai_api_rs::v1::chat_completion::{self, ChatCompletionRequest};
 use openai_api_rs::v1::common::GPT4_O_MINI;
 
-use crate::internals::{errors, image_handlers, prompts};
+use crate::{errors, file_handlers};
 
 pub fn create_openai_client(api_key: &str) -> Result<OpenAIClient, errors::APIKeyError> {
     let openai_api_key: String;
@@ -28,19 +28,29 @@ pub fn create_openai_client(api_key: &str) -> Result<OpenAIClient, errors::APIKe
     Ok(client)
 }
 
-/// Run OCR on an image using the OpenAI API, and save the extracted text to a JSON file.
+/// Run OCR on an image using the OpenAI API, and a given prompt
+///
+/// # Arguments
+///
+/// * `client` - an OpenAIClient instance.
+/// * `image_path` - a string slice that holds the path to the image file.
+/// * `prompt` - a string slice that holds the prompt for the GPT-4 model.
+///
+/// # Returns
+///
+/// Result<String, Box<dyn std::error::Error>> - a string that holds the extracted text from the image.
 pub async fn run_ocr_on_image(client: OpenAIClient, image_path: &str, prompt: &str) -> Result<String, Box<dyn std::error::Error>> {
     // idea from: https://community.openai.com/t/how-to-load-a-local-image-to-gpt4-vision-using-api/533090/3
     // load image as base64
     let image = image::open(image_path).unwrap();
-    let image_base64 = image_handlers::get_base64_from_image(image);
+    let image_base64 = file_handlers::get_base64_from_image(image);
     let url_data = String::from(
         "data:image/png;base64,".to_owned() + &image_base64,
     );
 
     let gpt4o_prompt: String;
     if prompt.is_empty() {
-        gpt4o_prompt = prompts::generate_personal_data_prompt();
+        gpt4o_prompt = "Extract text from the images.".to_string();
     } else {
         gpt4o_prompt = prompt.to_string();
     }
@@ -92,15 +102,6 @@ pub async fn run_ocr_on_image(client: OpenAIClient, image_path: &str, prompt: &s
         Err(e) => println!("Error: {}", e),
     }
     Ok("Unknown error.".to_string())
-}
-
-pub async fn save_json_to_file(json_data: &str, file_path: &str) -> Result<(), Box<dyn std::error::Error>> {
-    use std::fs::File;
-    use std::io::Write;
-
-    let mut file = File::create(file_path)?;
-    file.write_all(json_data.as_bytes())?;
-    Ok(())
 }
 
 #[cfg(test)]

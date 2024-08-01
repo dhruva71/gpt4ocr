@@ -2,6 +2,8 @@
 name = "gpt4ocr"
 version = "0.1.0"
 edition = "2021"
+authors = ["Dhruvajyoti Sarma <onlinedhruva71@gmail.com>"]
+license = "MIT"
 
 [dependencies]
 dotenvy = "0.15.7"
