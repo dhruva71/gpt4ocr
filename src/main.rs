@@ -19,14 +19,14 @@ async fn main() {
     let image_paths = images_from_pdf::extract_images_from_pdf(target_document).unwrap();
 
     // Step 2: Run OCR on the extracted images
-    let prompt: &str = "Extract text from the images, and generate JSON from it.";
+    let prompt: &str = "Extract text from the images, and generate JSON from it. Respond only with the json.";
     for image_path in image_paths {
         let response_json = gpt4o::run_ocr_on_image(gpt4o::create_openai_client(&openai_api_key).unwrap(), image_path.as_str(), prompt).await;
         match response_json {
             Ok(json) => {
                 println!("{}", json);
                 let json_path = image_path + ".json";
-                dbg!("Saving JSON to: {}", &json_path);
+                dbg!(&json_path);
                 let json_save = file_handlers::save_json_to_file(json.as_str(), json_path.as_str()).await;
                 match json_save {
                     Ok(_) => {
