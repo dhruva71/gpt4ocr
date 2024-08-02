@@ -16,12 +16,12 @@ pub fn create_openai_client(api_key: &str) -> Result<OpenAIClient, errors::APIKe
                 openai_api_key = key;
             }
             Err(e) => {
-                dbg!("Error: failed to load OpenAI API key.\nDetails: {}", e);
+                dbg!(e);
                 return Err(errors::APIKeyError::new("Failed to load OpenAI API key."));
             }
         }
     }
-    dbg!("Creating OpenAI client with API key: {}", &openai_api_key);
+    dbg!(&openai_api_key);
     let client = OpenAIClient::new(openai_api_key);
     Ok(client)
 }
