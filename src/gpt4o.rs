@@ -41,7 +41,7 @@ pub async fn run_ocr_on_image(client: OpenAIClient, image_path: &str, prompt: &s
     // idea from: https://community.openai.com/t/how-to-load-a-local-image-to-gpt4-vision-using-api/533090/3
     // load image as base64
     let image = image::open(image_path).unwrap();
-    let image_base64 = file_handlers::get_base64_from_image(image);
+    let image_base64 = file_handlers::get_base64_from_image(&image);
     let url_data = String::from(
         "data:image/png;base64,".to_owned() + &image_base64,
     );
