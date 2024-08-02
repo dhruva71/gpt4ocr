@@ -1,6 +1,6 @@
 [package]
 name = "gpt4ocr"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 authors = ["Dhruvajyoti Sarma <onlinedhruva71@gmail.com>"]
 license = "MIT"
