@@ -85,6 +85,35 @@ pub fn get_filename_from_path(file_path: &str) -> &str {
     filename
 }
 
+/// Filter markdown JSON data.
+///
+/// # Arguments
+///
+/// * `json_data` - a string slice that holds the JSON data.
+///
+/// # Returns
+///
+/// String - a string that holds the filtered JSON data.
+pub fn filter_markdown_json(json_data: &str) -> String {
+    let mut filtered_json = json_data.replace("\\n", "\n");
+
+    // remove ```json from the start and ``` from the end
+    filtered_json = filtered_json.replace("```json", "");
+    filtered_json = filtered_json.replace("```", "");
+
+    // remove extra backslashes
+    filtered_json = filtered_json.replace("\\\"", "\"");
+    filtered_json = filtered_json.replace("\t", "\t");
+    filtered_json = filtered_json.replace("\\r", "\r");
+    filtered_json = filtered_json.replace("\\\\", "\\");
+    filtered_json = filtered_json.replace("\\/", "/");
+
+    // strip leading and trailing whitespace
+    filtered_json = filtered_json.trim().to_string();
+
+    filtered_json
+}
+
 #[cfg(test)]
 mod tests {
     use image::ImageReader as ImageReader;
@@ -116,5 +145,12 @@ mod tests {
         let file_path2 = "invoice.png";
         let filename2 = get_filename_from_path(file_path2);
         assert_eq!(filename2, "invoice");
+    }
+
+    #[test]
+    fn test_filter_markdown_json() {
+        let json_data = r#"```json {"name": "John Doe","age": 30}```"#;
+        let filtered_json = filter_markdown_json(json_data);
+        assert_eq!(filtered_json, r#"{"name": "John Doe","age": 30}"#);
     }
 }

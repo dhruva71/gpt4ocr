@@ -145,16 +145,19 @@ pub async fn extract_json_from_pdf(target_document: &str, openai_api_key: &Strin
         let response_json = run_ocr_on_image(create_openai_client(&openai_api_key).unwrap(), image_path.as_str(), prompt.as_str()).await;
         match response_json {
             Ok(json) => {
-                println!("{}", json);
-                let json_path = image_path + ".json";
-                dbg!(&json_path);
+                let filtered_json = file_handlers::filter_markdown_json(json.as_str());
 
-                generated_jsons.push(json.clone());
+                // TODO do we need to clone the JSON?
+                generated_jsons.push(filtered_json.clone());
 
                 // if save_json is false, skip saving the JSON to a file
                 if !save_json {
                     continue;
                 }
+
+                println!("{}", json);
+                let json_path = image_path + ".json";
+                dbg!(&json_path);
 
                 let json_save = file_handlers::save_json_to_file(json.as_str(), json_path.as_str()).await;
                 match json_save {

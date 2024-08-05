@@ -12,4 +12,4 @@ Runs on linux. Needs poppler-utils to be installed. To install it on Ubuntu, run
 
 # Important observations
 * The time grows with the number of fields generated. You can specify the JSON format to limit the number of fields generated in the prompt, and that can help reduce the time required.
-* JSON comes back as a markdown block, so you can remove the "```json" and "```" to get the JSON data (not handled by the library yet).
+* JSON comes back as a markdown block, so you can remove the "```json" and "```" to get the JSON data (handled by the library).
