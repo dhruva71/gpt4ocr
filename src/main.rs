@@ -12,7 +12,7 @@ async fn main() {
     // load environment variables from .env file
     dotenv().expect(".env file not found");
 
-    let target_document = "Resume.pdf";
+    let target_document = "pdfs/Resume.pdf";
     let openai_api_key = env::var("OPENAI_API_KEY").expect("failed to load OpenAI API key");
 
     // Step 1: Extract images from the PDF file
