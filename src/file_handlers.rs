@@ -76,6 +76,15 @@ pub async fn save_json_to_file(json_data: &str, file_path: &str) -> Result<(), B
     }
 }
 
+pub fn get_filename_from_path(file_path: &str) -> &str {
+    let file_folder = match file_path.split('/').collect::<Vec<&str>>().last() {
+        Some(file) => file,
+        None => file_path,
+    };
+    let filename: &str = file_folder.split('.').collect::<Vec<&str>>()[0];
+    filename
+}
+
 #[cfg(test)]
 mod tests {
     use image::ImageReader as ImageReader;
@@ -96,5 +105,16 @@ mod tests {
         let file_path = "samples/test.json";
         let result = save_json_to_file(json_data, file_path);
         assert_eq!(result.await.is_ok(), true);
+    }
+
+    #[test]
+    fn test_get_filename_from_path() {
+        let file_path = "samples/invoice.png";
+        let filename = get_filename_from_path(file_path);
+        assert_eq!(filename, "invoice");
+
+        let file_path2 = "invoice.png";
+        let filename2 = get_filename_from_path(file_path2);
+        assert_eq!(filename2, "invoice");
     }
 }
