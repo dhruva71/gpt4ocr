@@ -5,6 +5,8 @@ Requires a .env file with the following variables:
 OPENAI_API_KEY=your_openai_api_key
 ```
 
+Alternatively, you can pass in the OPENAI_API_KEY as an environment variable to the `extract_json_from_pdf` function.
+
 # Operating systems
 Runs on linux. Needs poppler-utils to be installed. To install it on Ubuntu, run
 ```shell
