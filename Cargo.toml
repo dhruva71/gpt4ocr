@@ -1,10 +1,11 @@
 [package]
 name = "gpt4ocr"
-version = "0.3.1"
+version = "0.3.2"
 edition = "2021"
 authors = ["Dhruvajyoti Sarma <onlinedhruva71@gmail.com>"]
 license = "MIT"
 description = "Extract structured text from PDFs using OpenAI's GPT4o."
+readme = "README.md"
 
 [dependencies]
 dotenvy = "0.15.7"
