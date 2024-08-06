@@ -4,6 +4,7 @@ version = "0.3.0"
 edition = "2021"
 authors = ["Dhruvajyoti Sarma <onlinedhruva71@gmail.com>"]
 license = "MIT"
+description = "Extract structured text from PDFs using OpenAI's GPT4o."
 
 [dependencies]
 dotenvy = "0.15.7"
